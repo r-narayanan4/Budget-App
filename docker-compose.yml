@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres'
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: Budgy_development
+
+  rails:
+    build: ./
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/docker/app # add our local code to dockerfile
+    depends_on:
+      - postgres  # add all dependent containers
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=Budgy_development
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=admin123
+
+volumes:
+  postgres: # named volume
+
