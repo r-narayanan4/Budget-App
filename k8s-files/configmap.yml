@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rails-config
+  namespace: budget
+data:
+  RAILS_ENV: development
+  DATABASE_URL: postgres
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: Budgy_development

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rails-ingress
+  namespace: budget  # Change the namespace to 'budget'
+spec:
+  rules:
+    - host: budget.com  # Update with your actual domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rails  # Update with your Rails service name
+                port:
+                  number: 80  # Update with the port your Rails service is using

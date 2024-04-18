@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails
+  namespace: budget
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails
+  template:
+    metadata:
+      labels:
+        app: rails
+    spec:
+      containers:
+      - name: rails
+        image: rln410/budget-app:v2
+        ports:
+        - containerPort: 3000
+        env:
+        - name: RAILS_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: rails-config
+              key: RAILS_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: rails-config
+              key: DATABASE_URL
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: rails-config
+              key: DATABASE_PORT
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: rails-config
+              key: DATABASE_NAME
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: rails-secret
+              key: postgres_user
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rails-secret
+              key: postgres_password
+      volumes:
+      - name: rails-config
+        configMap:
+          name: rails-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rails
+  namespace: budget
+spec:
+  selector:
+    app: rails
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
